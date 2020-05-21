@@ -15,6 +15,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Collapse from '@material-ui/core/Collapse';
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
+import Grid from '@material-ui/core/Grid';
 
 const GetInfo = gql`
   {
@@ -65,61 +66,70 @@ export function Missions() {
 
   if (loading) return 'Loading...';
   if (error) return `Error...${error.message}`;
+  let count = 0;
 
   return (
     <div>
-      {data.launchesPast.map((mis) => (
-        <Card className={classes.root}>
-          <CardContent>
-            <Typography
-              className={classes.title}
-              color='textSecondary'
-              gutterBottom
-            >
-              {mis.mission_name}
-            </Typography>
-
-            <Typography className={classes.pos} color='textSecondary'>
-              {`Mission ID: ${mis.id}`}
-            </Typography>
-
-            <CardMedia
-              className={classes.media}
-              image={mis.links.flickr_images[0]}
-              title={mis.mission_name}
-              style={{ height: 300, width: 300 }}
-            />
-            <Typography variant='body2' component='p'>
-              {mis.rocket.rocket_name}
-              <br />
-              {mis.launch_date_utc}
-            </Typography>
-          </CardContent>
-          <CardActions>
-            <IconButton
-              className={clsx(classes.expand, {
-                [classes.expandOpen]: mis.id === expanded,
-              })}
-              onClick={() => handleExpandClick(mis.id)}
-              aria-expanded={expanded}
-              aria-label='show more'
-            >
-              <ExpandMoreIcon />
-            </IconButton>
-          </CardActions>
-          <Collapse in={mis.id === expanded} timeout='auto' unmountOnExit>
+      <Grid
+        container
+        direction='row'
+        justify='space-evenly'
+        alignItems='flex-start'
+        color='#4ecca3'
+      >
+        {data.launchesPast.map((mis) => (
+          <Card className={classes.root}>
             <CardContent>
-              <GridList className={classes.gridList} cols={2.5}>
-                {mis.links.flickr_images.map((tile) => (
-                  <GridListTile>
-                    <img src={tile} />
-                  </GridListTile>
-                ))}
-              </GridList>
+              <Typography
+                className={classes.title}
+                color='textSecondary'
+                gutterBottom
+              >
+                {mis.mission_name}
+              </Typography>
+
+              <Typography className={classes.pos} color='textSecondary'>
+                {`Mission ID: ${mis.id}`}
+              </Typography>
+
+              <CardMedia
+                className={classes.media}
+                image={mis.links.flickr_images[0]}
+                title={mis.mission_name}
+                style={{ height: 300, width: 300 }}
+              />
+              <Typography variant='body2' component='p'>
+                {mis.rocket.rocket_name}
+                <br />
+                {mis.launch_date_utc}
+              </Typography>
             </CardContent>
-          </Collapse>
-        </Card>
-      ))}
+            <CardActions>
+              <IconButton
+                className={clsx(classes.expand, {
+                  [classes.expandOpen]: mis.id === expanded,
+                })}
+                onClick={() => handleExpandClick(mis.id)}
+                aria-expanded={expanded}
+                aria-label='show more'
+              >
+                <ExpandMoreIcon />
+              </IconButton>
+            </CardActions>
+            <Collapse in={mis.id === expanded} timeout='auto' unmountOnExit>
+              <CardContent>
+                <GridList className={classes.gridList} cols={2.5}>
+                  {mis.links.flickr_images.map((tile) => (
+                    <GridListTile>
+                      <img src={tile} />
+                    </GridListTile>
+                  ))}
+                </GridList>
+              </CardContent>
+            </Collapse>
+          </Card>
+        ))}
+      </Grid>
     </div>
   );
 }
